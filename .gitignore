@@ -1,5 +1,9 @@
-#ignore all files except for .java file
-*
+# Ignore everything in repository root
+/*
 
-!/client/*.java
-!/server/*.java
+# Files to not ignore
+!/.gitignore
+
+# Folder to not ignore
+!/client/
+!/server/
