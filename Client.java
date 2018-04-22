@@ -60,7 +60,8 @@ public class Client{
 		int index = 0;
 		while(scan.hasNextLine()){
 			String[] tokens = scan.nextLine().split(" ");
-			Location loc = new Location(tokens[0], tokens[1]);
+			Gift gift = new Gift(tokens[1], System.currentTimeMillis());
+			Location loc = new Location(tokens[0], gift);
 			locs[index] = loc;
 
 			// read the transition matrix

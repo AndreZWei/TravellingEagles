@@ -1,6 +1,7 @@
 
+import java.io.Serializable;
 
-public class Gift {
+public class Gift implements Serializable {
     private String gift;
     private long time;
 

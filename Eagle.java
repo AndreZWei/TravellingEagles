@@ -7,14 +7,24 @@ import java.io.Serializable;
 public class Eagle implements Serializable{
 	private String name;
 	private Location currentLocation;
+	private List<Gift> bag;
 
 	public Eagle(String name, Location home){
 		this.name = name;
 		this.currentLocation = home;
+		this.bag = new ArrayList<Gift>();
 	}
 
 	public Location getLocation(){
 		return currentLocation;
+	}
+
+	public List<Gift> getBag(){
+		return bag;
+	}
+
+	public void addGift(Gift gift){
+		bag.add(gift);
 	}
 
 	// Use the transition matrix to select a place to travel
@@ -52,6 +62,11 @@ public class Eagle implements Serializable{
 		}
 		else {
 			System.out.println(name + " is travelling to " + loc.getName());
+			Random r = new Random();
+			if (r.nextDouble() > 0.5){
+				addGift(loc.getGift());
+				System.out.println(name + " gets the gift " + loc.getGift().getGift());
+			}
 			currentLocation = loc;
 		}
 	}

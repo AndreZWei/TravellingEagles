@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class Location implements Serializable{
 	private String name;
-	private String gift;
+	private Gift gift;
 
-	public Location(String name, String gift){
+	public Location(String name, Gift gift){
 		this.name = name;
 		this.gift = gift;
 	}
@@ -15,7 +15,7 @@ public class Location implements Serializable{
 		return name;
 	}
 
-	public String getGift(){
+	public Gift getGift(){
 		return gift;
 	}
 }
