@@ -29,6 +29,10 @@ public class Eagle implements Serializable{
 		return bag;
 	}
 
+	public void showBag(){
+		bag.forEach((Gift gift) -> System.out.println((bag.indexOf(gift) + 1) + ": " + gift.getGift()));
+	}
+
 	public void addGift(Gift gift){
 		bag.add(gift);
 	}
