@@ -2,7 +2,6 @@ package client;
 
 import java.rmi.*;
 
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -12,10 +11,17 @@ import server.ServerAPI;
 
 public class ChatRoomManager {
 	
-	String ServerIp;
+	ServerAPI ServerIp;
+
+	DatagramSocket socket;
+
+	private int PORT;
+	private String IPaddress;
 	
-	public ChatRoomManager(String ServerIP ){
+	public ChatRoomManager(ServerAPI ServerIP,String IPadrress,int PORT) throws Exception{
 		this.ServerIp = ServerIp;
+		
+		this.socket = new DatagramSocket();
 
 	}
 
