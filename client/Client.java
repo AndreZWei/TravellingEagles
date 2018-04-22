@@ -62,10 +62,11 @@ public class Client{
 		while(true){
 			try{
 				Thread.sleep(1000);
+				Location loc = eagle.travel(map);
+				server.updateLocation(eagle.getID(), loc);
 			} catch (Exception e){
 				System.out.println(e);
 			}
-			eagle.travel(map);
 		}
 	}
 

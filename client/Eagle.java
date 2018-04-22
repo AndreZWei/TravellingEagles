@@ -20,7 +20,7 @@ public class Eagle implements Serializable{
 	public int getID(){
 		return eagleID;
 	}
-	
+
 	public Location getLocation(){
 		return currentLocation;
 	}
@@ -34,7 +34,7 @@ public class Eagle implements Serializable{
 	}
 
 	// Use the transition matrix to select a place to travel
-	public void travel(Map map){
+	public Location travel(Map map){
 		double[][] matrix = map.getMatrix();
 		Location[] locs = map.getLocations();
 
@@ -60,6 +60,8 @@ public class Eagle implements Serializable{
 		}
 
 		travelTo(locs[maxIndex]);
+
+		return locs[maxIndex];
 	}
 
 	public void travelTo(Location loc){
