@@ -2,6 +2,8 @@
 
 *
 
-!/client/
+!
 
-!/server/
+!/client/*.java
+
+!/server/*.java
