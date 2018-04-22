@@ -17,7 +17,7 @@ public interface ServerAPI extends Remote {
 
     void disconnect(int eagleId) throws RemoteException;
 
-    void putDriftBottle(int eagleId, String bottle) throws RemoteException;
+    void putDriftBottle(int eagleId, Gift.DriftBottle bottle) throws RemoteException;
 
     Gift.DriftBottle getDriftBottle(Location location) throws RemoteException;
 

@@ -3,17 +3,23 @@ package server;
 import client.Gift;
 import client.Location;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Server implements ServerAPI{
+public class Server extends RemoteServer implements ServerAPI {
     private int eagleIdIndex = 0;
     private ArrayList<ChatRoom> rooms;
+    private HashMap<Integer, InetAddress> sockets;
 
     public Server() {
         rooms = new ArrayList<>();
@@ -21,7 +27,15 @@ public class Server implements ServerAPI{
 
     @Override
     public int register() throws RemoteException {
-        return eagleIdIndex++;
+        int myIndex = eagleIdIndex++;
+        try {
+            sockets.put(myIndex, InetAddress.getByName(getClientHost()));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        }
+        return myIndex;
     }
 
     @Override
@@ -31,26 +45,31 @@ public class Server implements ServerAPI{
             ChatRoom chatRoom = roomIt.next();
             chatRoom.leaveRoom(eagleId);
         }
-        rooms.s
+        rooms.get(rooms.indexOf(newLocation)).joinRoom(eagleId);
     }
 
     @Override
     public void sendMessage(int eagleId, String payload) throws RemoteException {
-
+        // TODO: 4/22/18  
     }
 
     @Override
     public void disconnect(int eagleId) throws RemoteException {
-
+        Iterator<ChatRoom> roomIt = rooms.iterator();
+        while (roomIt.hasNext()){
+            ChatRoom chatRoom = roomIt.next();
+            chatRoom.leaveRoom(eagleId);
+        }
     }
 
     @Override
-    public void putDriftBottle(int eagleId, String bottle) throws RemoteException {
-
+    public void putDriftBottle(int eagleId, Gift.DriftBottle bottle) throws RemoteException {
+        // TODO: 4/22/18  
     }
 
     @Override
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
+        // TODO: 4/22/18
         return null;
     }
 
