@@ -1,3 +1,7 @@
 #ignore all files except for .java file
+
 *
-!*.java
+
+!/client/
+
+!/server/
