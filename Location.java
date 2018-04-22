@@ -1,7 +1,8 @@
 /** Location information
  */
+import java.io.Serializable;
 
-public class Location{
+public class Location implements Serializable{
 	private String name;
 	private String gift;
 

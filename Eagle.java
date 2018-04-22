@@ -2,8 +2,9 @@
  */
 
 import java.util.*;
+import java.io.Serializable;
 
-public class Eagle{
+public class Eagle implements Serializable{
 	private String name;
 	private Location currentLocation;
 

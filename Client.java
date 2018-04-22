@@ -9,6 +9,7 @@ public class Client{
 	public static Eagle eagle;
 
 	public static void main(String[] args){
+
 		// read the map
 		try{
 			File file = new File("map.config");
@@ -17,11 +18,28 @@ public class Client{
 		} catch (FileNotFoundException e){
 			System.out.println(e);
 		}
+		
+		Eagle eagle = null;
 
-		// Create an eagle object
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Give your eagle a name!");
-		Eagle eagle = new Eagle(scan.nextLine(), map.getLocations()[0]);
+		try{
+			File file = new File("eagle.log");
+			if (file.exists()){
+				InputStream is = new FileInputStream(file);
+				ObjectInputStream ois = new ObjectInputStream(is);
+				eagle = (Eagle) ois.readObject();
+			}
+			else {
+				// Create an eagle object
+				Scanner scan = new Scanner(System.in);
+				System.out.println("Give your eagle a name!");
+				eagle = new Eagle(scan.nextLine(), map.getLocations()[0]);
+				OutputStream os = new FileOutputStream(file);
+				ObjectOutputStream oos = new ObjectOutputStream(os);
+				oos.writeObject(eagle);
+			}
+		} catch (Exception e){
+			System.out.println(e);
+		}
 
 		while(true){
 			try{
