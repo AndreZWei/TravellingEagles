@@ -25,6 +25,10 @@ public class ChatRoomManager {
 
 	}
 
+	public ServerAPI getIP(){
+		return this.ServerIp;
+	}
+
 
 	public  String readFromKeyboard() throws Exception {
 		BufferedReader stdin; /* input from keyboard */
