@@ -47,9 +47,10 @@ public class Client{
 			}
 			else {
 				// Create an eagle object
+				int eagleID = server.register();
 				Scanner scan = new Scanner(System.in);
 				System.out.println("Give your eagle a name!");
-				eagle = new Eagle(scan.nextLine(), map.getLocations()[0]);
+				eagle = new Eagle(eagleID, scan.nextLine(), map.getLocations()[0]);
 				OutputStream os = new FileOutputStream(file);
 				ObjectOutputStream oos = new ObjectOutputStream(os);
 				oos.writeObject(eagle);
@@ -61,10 +62,11 @@ public class Client{
 		while(true){
 			try{
 				Thread.sleep(1000);
+				Location loc = eagle.travel(map);
+				server.updateLocation(eagle.getID(), loc);
 			} catch (Exception e){
 				System.out.println(e);
 			}
-			eagle.travel(map);
 		}
 	}
 

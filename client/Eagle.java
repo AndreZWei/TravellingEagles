@@ -5,14 +5,20 @@ import java.util.*;
 import java.io.Serializable;
 
 public class Eagle implements Serializable{
+	private int eagleID;
 	private String name;
 	private Location currentLocation;
 	private List<Gift> bag;
 
-	public Eagle(String name, Location home){
+	public Eagle(int eagleID, String name, Location home){
+		this.eagleID = eagleID;
 		this.name = name;
 		this.currentLocation = home;
 		this.bag = new ArrayList<Gift>();
+	}
+
+	public int getID(){
+		return eagleID;
 	}
 
 	public Location getLocation(){
@@ -28,7 +34,7 @@ public class Eagle implements Serializable{
 	}
 
 	// Use the transition matrix to select a place to travel
-	public void travel(Map map){
+	public Location travel(Map map){
 		double[][] matrix = map.getMatrix();
 		Location[] locs = map.getLocations();
 
@@ -54,6 +60,8 @@ public class Eagle implements Serializable{
 		}
 
 		travelTo(locs[maxIndex]);
+
+		return locs[maxIndex];
 	}
 
 	public void travelTo(Location loc){
