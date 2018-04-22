@@ -5,16 +5,22 @@ import java.util.*;
 import java.io.Serializable;
 
 public class Eagle implements Serializable{
+	private int eagleID;
 	private String name;
 	private Location currentLocation;
 	private List<Gift> bag;
 
-	public Eagle(String name, Location home){
+	public Eagle(int eagleID, String name, Location home){
+		this.eagleID = eagleID;
 		this.name = name;
 		this.currentLocation = home;
 		this.bag = new ArrayList<Gift>();
 	}
 
+	public int getID(){
+		return eagleID;
+	}
+	
 	public Location getLocation(){
 		return currentLocation;
 	}
