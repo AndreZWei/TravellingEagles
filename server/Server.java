@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class Server extends RemoteServer implements ServerAPI {
+    private static final int CLIENT_UDP_PORT = 9999;
     private int eagleIdIndex = 0;
     private ArrayList<ChatRoom> rooms;
     private HashMap<Integer, InetAddress> sockets;
@@ -50,7 +51,20 @@ public class Server extends RemoteServer implements ServerAPI {
 
     @Override
     public void sendMessage(int eagleId, String payload) throws RemoteException {
-        // TODO: 4/22/18  
+        Iterator<ChatRoom> roomIt = rooms.iterator();
+        while (roomIt.hasNext()) {
+            ChatRoom chatRoom = roomIt.next();
+            ArrayList<Integer> members = chatRoom.members;
+            int index = members.indexOf(eagleId);
+            if (index > -1) {
+                for (int i=0; i < members.size(); i++) {
+                    if (i != index) {
+                        // TODO: 4/23/2018 make datagram packet and send message here
+                    }
+                }
+                return;
+            }
+        }
     }
 
     @Override
@@ -64,7 +78,8 @@ public class Server extends RemoteServer implements ServerAPI {
 
     @Override
     public void putDriftBottle(int eagleId, Gift.DriftBottle bottle) throws RemoteException {
-        // TODO: 4/22/18  
+        // TODO: 4/22/18
+
     }
 
     @Override
@@ -110,5 +125,10 @@ public class Server extends RemoteServer implements ServerAPI {
                 members.remove(eagleId);
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            ChatRoom room = (ChatRoom) obj;
+            return room.roomLocation.equals(this.roomLocation);
+        }
     }
 }
