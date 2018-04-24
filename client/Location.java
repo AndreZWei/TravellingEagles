@@ -18,4 +18,10 @@ public class Location implements Serializable{
 	public Gift getGift(){
 		return gift;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Location location = (Location) obj;
+		return this.name.equals(location.name);
+	}
 }
