@@ -24,6 +24,7 @@ public class Server extends RemoteServer implements ServerAPI {
 
     public Server() {
         rooms = new ArrayList<>();
+        sockets = new HashMap<>();
     }
 
     @Override
