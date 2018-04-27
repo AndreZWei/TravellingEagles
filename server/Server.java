@@ -1,11 +1,11 @@
 package server;
 
+import client.DriftBottle;
 import client.Gift;
 import client.Location;
 
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,12 +15,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Server extends RemoteServer implements ServerAPI {
     private static final int CLIENT_UDP_PORT = 9999;
     private int eagleIdIndex = 0;
     private ArrayList<ChatRoom> rooms;
     private HashMap<Integer, InetAddress> sockets;
+    private HashMap<Location, LinkedList<Gift.DriftBottle>> driftBottles;
 
     public Server() {
         rooms = new ArrayList<>();
@@ -58,11 +60,24 @@ public class Server extends RemoteServer implements ServerAPI {
             ArrayList<Integer> members = chatRoom.members;
             int index = members.indexOf(eagleId);
             if (index > -1) {
+                byte[] buffer = payload.getBytes();
+                DatagramSocket socket = null;
+                try {
+                    socket = new DatagramSocket();
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
                 for (int i=0; i < members.size(); i++) {
                     if (i != index) {
-                        // TODO: 4/23/2018 make datagram packet and send message here
+                        DatagramPacket packet = new DatagramPacket(buffer,buffer.length, sockets.get(members.get(i)), CLIENT_UDP_PORT);
+                        try {
+                            socket.send(packet);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                socket.close();
                 return;
             }
         }
@@ -80,13 +95,26 @@ public class Server extends RemoteServer implements ServerAPI {
     @Override
     public void putDriftBottle(int eagleId, Gift.DriftBottle bottle) throws RemoteException {
         // TODO: 4/22/18
-
+        Location eagleLocation;
+        for (ChatRoom room : rooms) {
+            ArrayList members = room.members;
+            int eagleIndex = members.indexOf(eagleId);
+            Location location;
+            if (eagleIndex > -1) {
+                location = room.roomLocation;
+                LinkedList<Gift.DriftBottle> bottles = driftBottles.get(location);
+                bottles.addLast(bottle);
+                return;
+            }
+        }
     }
 
     @Override
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
-        // TODO: 4/22/18
-        return null;
+        LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location);
+        if (bottleHere.isEmpty())
+            return null;
+        return bottleHere.getFirst();
     }
 
 
