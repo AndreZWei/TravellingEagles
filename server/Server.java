@@ -1,6 +1,5 @@
 package server;
 
-import client.DriftBottle;
 import client.Gift;
 import client.Location;
 
@@ -27,6 +26,7 @@ public class Server extends RemoteServer implements ServerAPI {
     public Server() {
         rooms = new ArrayList<>();
         sockets = new HashMap<>();
+        driftBottles = new HashMap<>();
     }
 
     @Override
@@ -49,7 +49,12 @@ public class Server extends RemoteServer implements ServerAPI {
             ChatRoom chatRoom = roomIt.next();
             chatRoom.leaveRoom(eagleId);
         }
-        rooms.get(rooms.indexOf(newLocation)).joinRoom(eagleId);
+        for (ChatRoom room : rooms) {
+            if (room.roomLocation.equals(newLocation)) {
+                room.joinRoom(eagleId);
+                return;
+            }
+        }
     }
 
     @Override
