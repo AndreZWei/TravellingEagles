@@ -30,10 +30,11 @@ public class Eagle implements Serializable{
 	}
 
 	public void showBag(){
-		bag.forEach((Gift gift) -> System.out.println((bag.indexOf(gift) + 1) + ": " + gift.getGift()));
+		bag.forEach((Gift gift) -> System.out.println((bag.indexOf(gift) + 1) + ": " + gift.getName()));
 	}
 
 	public void addGift(Gift gift){
+		System.out.println("Congratulations! You got the gift " + gift.getName());
 		bag.add(gift);
 	}
 
@@ -75,9 +76,8 @@ public class Eagle implements Serializable{
 		else {
 			System.out.println(name + " is travelling to " + loc.getName());
 			Random r = new Random();
-			if (r.nextDouble() > 0.5){
+			if (r.nextDouble() > 0){
 				addGift(loc.getGift());
-				System.out.println(name + " gets the gift " + loc.getGift().getGift());
 			}
 			currentLocation = loc;
 		}

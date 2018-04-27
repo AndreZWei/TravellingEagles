@@ -2,7 +2,10 @@
 package client;
 
 
-
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import server.Server;
 import server.ServerAPI;
 import java.io.*;
@@ -16,40 +19,58 @@ public class ClientSenderThread implements Runnable {
 	public ClientSenderThread(Eagle eagle, ChatRoomManager crm){
 		this.eagle = eagle;
 		this.crm = crm;
-		this.server = crm.getIP();
-		
+		//System.out.println("ClientSenderThread server = " + crm.getIP());
+		try {
+			Registry registry = LocateRegistry.getRegistry(crm.getIPaddress(), crm.getPort());
+			server = (ServerAPI) registry.lookup("server");
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 
 	public void run() {
 		try{
-			String msg = crm.readFromKeyboard();
-			if (msg.startsWith("put")){
-				eagle.showBag();
-				System.out.println("Choose a gift from the bag.");
-				int index = Integer.parseInt(crm.readFromKeyboard()) - 1;
-				System.out.println("Enter a message you want to leave.");
-				String text = crm.readFromKeyboard();
-				Gift.DriftBottle bottle = new Gift.DriftBottle(eagle.getBag().get(index), text);
-				server.putDriftBottle(eagle.getID(), bottle);
-			}	
-			else if (msg.startsWith("get")){
-				server.getDriftBottle(eagle.getLocation());
-			}
-			else if (msg.startsWith("dis")){
-				File file = new File("eagle.log");
-				// Create an eagle object
-				OutputStream os = new FileOutputStream(file);
-				ObjectOutputStream oos = new ObjectOutputStream(os);
-				oos.writeObject(eagle);
-				server.disconnect(eagle.getID());
-			}
-			else {
-				server.sendMessage(eagle.getID(), msg);
+			while(true){
+				String msg = crm.readFromKeyboard();
+				if (msg.startsWith("put")){
+					eagle.showBag();
+					System.out.println("Choose a gift from the bag.");
+					int index = Integer.parseInt(crm.readFromKeyboard()) - 1;
+					System.out.println("Enter a message you want to leave.");
+					String text = crm.readFromKeyboard();
+					Gift.DriftBottle bottle = new Gift.DriftBottle(eagle.getBag().get(index), text);
+					server.putDriftBottle(eagle.getID(), bottle);
+				}	
+				else if (msg.startsWith("get")){
+					Gift.DriftBottle bottle = server.getDriftBottle(eagle.getLocation());
+					if (bottle == null){
+						System.out.println("Sorry there is no bottle left in this place...");
+					} else {
+						eagle.addGift(bottle.getGift());
+						System.out.println("You also received a note:");
+						System.out.println(bottle.getMessage());
+					}
+				}
+				else if (msg.startsWith("dis")){
+					File file = new File("eagle.log");
+					// Create an eagle object
+					OutputStream os = new FileOutputStream(file);
+					ObjectOutputStream oos = new ObjectOutputStream(os);
+					oos.writeObject(eagle);
+					server.disconnect(eagle.getID());
+					System.out.println("disconnected!");
+					break;
+				}
+				else {
+					server.sendMessage(eagle.getID(), msg);
+				}
 			}
 		}
 		catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 

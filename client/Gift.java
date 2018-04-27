@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Gift implements Serializable {
-    private String gift;
+    private String name;
     private long time;
 
-    public Gift(String gift, long time) {
-        this.gift = gift;
+    public Gift(String name, long time) {
+        this.name = name;
         this.time = time;
     }
 
@@ -16,11 +16,11 @@ public class Gift implements Serializable {
         return time;
     }
 
-    public String getGift(){
-        return gift;
+    public String getName(){
+        return name;
     }
 
-    public static class DriftBottle {
+    public static class DriftBottle implements Serializable{
         private Gift gift;
         private String msg;
 

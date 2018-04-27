@@ -19,7 +19,7 @@ public class Client{
 
 		// read the map
 		try{
-			File file = new File("map.config");
+			File file = new File("../map.config");
 			Scanner scan = new Scanner(file);
 			map = readMap(scan);
 		} catch (FileNotFoundException e){
@@ -27,9 +27,10 @@ public class Client{
 		}
 		ServerAPI server = null;
 		try {
-			Registry registry = LocateRegistry.getRegistry(args[0]);
+			Registry registry = LocateRegistry.getRegistry("localhost", 9999);
+			System.out.println("检查网路连接...");
 			server = (ServerAPI) registry.lookup("server");
-
+			System.out.println("檢查完畢!");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -39,14 +40,16 @@ public class Client{
 		Eagle eagle = null;
 
 		try{
-			File file = new File("eagle.log");
+			File file = new File("../eagle.log");
 			if (file.exists()){
 				InputStream is = new FileInputStream(file);
 				ObjectInputStream ois = new ObjectInputStream(is);
 				eagle = (Eagle) ois.readObject();
+				System.out.println("讀檔完成!");
 			}
 			else {
 				// Create an eagle object
+				// System.out.println("Registering");
 				int eagleID = server.register();
 				Scanner scan = new Scanner(System.in);
 				System.out.println("Give your eagle a name!");
@@ -56,17 +59,27 @@ public class Client{
 				oos.writeObject(eagle);
 			}
 		} catch (Exception e){
+			e.printStackTrace();
 			System.out.println(e);
 		}
 
-		while(true){
-			try{
-				Thread.sleep(1000);
+		// Create Sender and Receiver Threads
+		try{
+			ChatRoomManager crm = new ChatRoomManager("localhost", 9999);
+			Thread sender = new Thread(new ClientSenderThread(eagle, crm));
+			sender.start();
+			Thread receiver = new Thread(new ClientRoomReceiverThread(crm));
+			receiver.start();
+			while(true){
+				if (!sender.isAlive())
+					break;
 				Location loc = eagle.travel(map);
-				server.updateLocation(eagle.getID(), loc);
-			} catch (Exception e){
-				System.out.println(e);
-			}
+				Thread.sleep(10000);
+				//server.updateLocation(eagle.getID(), loc);
+			} 
+		}
+		catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 

@@ -11,30 +11,28 @@ import server.ServerAPI;
 
 public class ChatRoomManager {
 	
-	ServerAPI ServerIp;
-
-	DatagramSocket socket;
-
+	private DatagramSocket socket;
 	private int PORT;
 	private String IPaddress;
 	
-	public ChatRoomManager(ServerAPI ServerIP,String IPadrress,int PORT) throws Exception{
-		this.ServerIp = ServerIp;
-		
+	public ChatRoomManager(String IPaddress, int PORT) throws Exception{
+		this.IPaddress = IPaddress;
+		this.PORT = PORT;
 		this.socket = new DatagramSocket();
-
 	}
 
-	public ServerAPI getIP(){
-		return this.ServerIp;
+	public String getIPaddress(){
+		return this.IPaddress;
 	}
 
+	public int getPort(){
+		return this.PORT;
+	}
 
 	public  String readFromKeyboard() throws Exception {
 		BufferedReader stdin; /* input from keyboard */
 		String sendString; /* string to be sent */
 		stdin = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Enter text: ");
 		sendString = stdin.readLine();
 		return sendString;
 	}
