@@ -23,8 +23,9 @@ public class Server extends RemoteServer implements ServerAPI {
 
     public Server() throws IOException {
         rooms = new ArrayList<>();
-        BufferedReader configReader = new BufferedReader(new FileReader("map.config"));
+        BufferedReader configReader = new BufferedReader(new FileReader("../map.config"));
         String currentLine;
+        configReader.readLine();
         while ((currentLine = configReader.readLine()) != null) {
             String[] tokens = currentLine.split("\\s+");
             rooms.add(new ChatRoom(new Location(tokens[0], new Gift(tokens[1], System.currentTimeMillis()))));
@@ -138,7 +139,7 @@ public class Server extends RemoteServer implements ServerAPI {
             ServerAPI stub = (ServerAPI) UnicastRemoteObject.exportObject(server, registryPort);
             registry.rebind("server", stub);
             System.out.println("Server ready");
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             System.err.println("Server initialization exception: RMI bound failed");
             e.printStackTrace();
         }
