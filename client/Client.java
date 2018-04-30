@@ -75,7 +75,7 @@ public class Client{
 					break;
 				Location loc = eagle.travel(map);
 				server.updateLocation(eagle.getID(), loc);
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 				//server.updateLocation(eagle.getID(), loc);
 			} 
 		}

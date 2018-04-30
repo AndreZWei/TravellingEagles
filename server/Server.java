@@ -56,6 +56,7 @@ public class Server extends RemoteServer implements ServerAPI {
         }
         for (ChatRoom room : rooms) {
             if (room.roomLocation.equals(newLocation)) {
+                System.out.println("joined room " + newLocation.getName());
                 room.joinRoom(eagleId);
                 return;
             }
@@ -64,6 +65,7 @@ public class Server extends RemoteServer implements ServerAPI {
 
     @Override
     public void sendMessage(int eagleId, String payload) throws RemoteException {
+        System.out.println("Received message, send text");
         Iterator<ChatRoom> roomIt = rooms.iterator();
         while (roomIt.hasNext()) {
             ChatRoom chatRoom = roomIt.next();
@@ -104,6 +106,7 @@ public class Server extends RemoteServer implements ServerAPI {
 
     @Override
     public void putDriftBottle(int eagleId, Gift.DriftBottle bottle) throws RemoteException {
+        System.out.println("Received request, put bottle ");
         // TODO: 4/22/18
         Location eagleLocation;
         for (ChatRoom room : rooms) {
@@ -116,6 +119,7 @@ public class Server extends RemoteServer implements ServerAPI {
                 if (bottles == null)
                     bottles = new LinkedList<>();
                 bottles.addLast(bottle);
+                System.out.println("put bottle in room " + location.getName());
                 return;
             }
         }
@@ -123,7 +127,9 @@ public class Server extends RemoteServer implements ServerAPI {
 
     @Override
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
+        System.out.println("Get request, get bottle " + location.getName());
         LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location);
+        System.out.println(bottleHere.size());
         if (bottleHere == null || bottleHere.isEmpty())
             return null;
         return bottleHere.getFirst();
