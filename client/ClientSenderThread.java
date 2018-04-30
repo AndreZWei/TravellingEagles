@@ -37,12 +37,16 @@ public class ClientSenderThread implements Runnable {
 				String msg = crm.readFromKeyboard();
 				if (msg.startsWith("put")){
 					eagle.showBag();
-					System.out.println("Choose a gift from the bag.");
-					int index = Integer.parseInt(crm.readFromKeyboard()) - 1;
-					System.out.println("Enter a message you want to leave.");
-					String text = crm.readFromKeyboard();
-					Gift.DriftBottle bottle = new Gift.DriftBottle(eagle.getBag().get(index), text);
-					server.putDriftBottle(eagle.getID(), bottle);
+					if (!eagle.getBag().isEmpty()){
+						System.out.println("Choose a gift from the bag.");
+						int index = Integer.parseInt(crm.readFromKeyboard()) - 1;
+						System.out.println("Enter a message you want to leave.");
+						String text = crm.readFromKeyboard();
+						Gift.DriftBottle bottle = new Gift.DriftBottle(eagle.getBag().get(index), text);
+						server.putDriftBottle(eagle.getID(), bottle);
+					} else {
+						System.out.println("It looks like your bag is empty...");
+					}
 				}	
 				else if (msg.startsWith("get")){
 					Gift.DriftBottle bottle = server.getDriftBottle(eagle.getLocation());
