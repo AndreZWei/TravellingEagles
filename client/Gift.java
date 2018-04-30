@@ -2,6 +2,7 @@ package client;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.*;
 
 public class Gift implements Serializable {
     private String name;
@@ -26,7 +27,7 @@ public class Gift implements Serializable {
 
         public DriftBottle(Gift gift, String msg) {
             this.gift = gift;
-            this.msg = Objects.toString((long) gift.getTime())+": "+msg;
+            this.msg = Objects.toString(new Date(gift.getTime()))+": "+msg;
         }
 
         public String getMessage(){
