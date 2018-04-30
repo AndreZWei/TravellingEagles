@@ -26,7 +26,7 @@ public class Gift implements Serializable {
 
         public DriftBottle(Gift gift, String msg) {
             this.gift = gift;
-            this.msg = Objects.toString(gift.getTime())+": "+msg;
+            this.msg = Objects.toString((long) gift.getTime())+": "+msg;
         }
 
         public String getMessage(){

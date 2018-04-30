@@ -14,6 +14,7 @@ import java.io.*;
 public class Client{
 	public static Map map;
 	public static Eagle eagle;
+	public static final String SERVER = "136.167.126.53";
 
 	public static void main(String[] args){
 
@@ -27,7 +28,7 @@ public class Client{
 		}
 		ServerAPI server = null;
 		try {
-			Registry registry = LocateRegistry.getRegistry("localhost", 9999);
+			Registry registry = LocateRegistry.getRegistry(SERVER, 9999);
 			System.out.print("Checking network connection...");
 			server = (ServerAPI) registry.lookup("server");
 			System.out.println("complete!");
@@ -65,7 +66,7 @@ public class Client{
 
 		// Create Sender and Receiver Threads
 		try{
-			ChatRoomManager crm = new ChatRoomManager("localhost", 9999);
+			ChatRoomManager crm = new ChatRoomManager(SERVER, 9999);
 			Thread sender = new Thread(new ClientSenderThread(eagle, crm));
 			sender.start();
 			Thread receiver = new Thread(new ClientRoomReceiverThread(crm));
