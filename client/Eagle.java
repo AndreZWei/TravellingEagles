@@ -21,6 +21,10 @@ public class Eagle implements Serializable{
 		return eagleID;
 	}
 
+	public void setID(int id){
+		this.eagleID = id;
+	}
+
 	public Location getLocation(){
 		return currentLocation;
 	}
