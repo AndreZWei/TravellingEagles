@@ -66,7 +66,7 @@ public class Server extends RemoteServer implements ServerAPI {
     }
 
     @Override
-    public void sendMessage(int eagleId, String payload) throws RemoteException {
+    public synchronized void sendMessage(int eagleId, String payload) throws RemoteException {
         System.out.println("Received message, send text");
         Iterator<ChatRoom> roomIt = rooms.iterator();
         while (roomIt.hasNext()) {
@@ -110,6 +110,7 @@ public class Server extends RemoteServer implements ServerAPI {
             ChatRoom chatRoom = roomIt.next();
             chatRoom.leaveRoom(eagleId);
         }
+        sockets.remove(eagleId);
     }
 
     @Override
