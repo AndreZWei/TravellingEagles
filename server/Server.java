@@ -3,28 +3,32 @@ package server;
 import client.Gift;
 import client.Location;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
+import java.nio.Buffer;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Server extends RemoteServer implements ServerAPI {
     private static final int CLIENT_UDP_PORT = 9999;
     private int eagleIdIndex = 0;
-    private ArrayList<ChatRoom> rooms;
+    ArrayList<ChatRoom> rooms;
     private HashMap<Integer, InetAddress> sockets;
     private HashMap<Location, LinkedList<Gift.DriftBottle>> driftBottles;
 
-    public Server() {
+    public Server() throws IOException {
         rooms = new ArrayList<>();
+        BufferedReader configReader = new BufferedReader(new FileReader("map.config"));
+        String currentLine;
+        while ((currentLine = configReader.readLine()) != null) {
+            String[] tokens = currentLine.split("\\s+");
+            rooms.add(new ChatRoom(new Location(tokens[0], new Gift(tokens[1], System.currentTimeMillis()))));
+        }
         sockets = new HashMap<>();
         driftBottles = new HashMap<>();
     }
