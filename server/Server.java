@@ -19,11 +19,11 @@ public class Server extends RemoteServer implements ServerAPI {
     private int eagleIdIndex = 0;
     ArrayList<ChatRoom> rooms;
     private HashMap<Integer, InetAddress> sockets;
-    private HashMap<Location, LinkedList<Gift.DriftBottle>> driftBottles;
+    private HashMap<String, LinkedList<Gift.DriftBottle>> driftBottles;
 
     public Server() throws IOException {
         rooms = new ArrayList<>();
-        BufferedReader configReader = new BufferedReader(new FileReader("../map.config"));
+        BufferedReader configReader = new BufferedReader(new FileReader("map.config"));
         String currentLine;
         configReader.readLine();
         while ((currentLine = configReader.readLine()) != null) {
@@ -115,10 +115,10 @@ public class Server extends RemoteServer implements ServerAPI {
             Location location;
             if (eagleIndex > -1) {
                 location = room.roomLocation;
-                LinkedList<Gift.DriftBottle> bottles = driftBottles.get(location);
+                LinkedList<Gift.DriftBottle> bottles = driftBottles.get(location.getName());
                 if (bottles == null) {
                     bottles = new LinkedList<>();
-                    driftBottles.put(location, bottles);
+                    driftBottles.put(location.getName(), bottles);
                     System.out.println("add new list");
                 }
                 bottles.addLast(bottle);
@@ -131,7 +131,7 @@ public class Server extends RemoteServer implements ServerAPI {
     @Override
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
         System.out.println("Get request, get bottle " + location.getName());
-        LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location);
+        LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location.getName());
         System.out.println(bottleHere.size());
         if (bottleHere == null || bottleHere.isEmpty())
             return null;
