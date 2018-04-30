@@ -66,6 +66,7 @@ public class ClientSenderThread implements Runnable {
 					oos.writeObject(eagle);
 					server.disconnect(eagle.getID());
 					System.out.println("disconnected!");
+					System.exit(0);
 					break;
 				}
 				else {
