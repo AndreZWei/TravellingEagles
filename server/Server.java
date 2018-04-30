@@ -119,6 +119,7 @@ public class Server extends RemoteServer implements ServerAPI {
                 if (bottles == null) {
                     bottles = new LinkedList<>();
                     driftBottles.put(location, bottles);
+                    System.out.println("add new list");
                 }
                 bottles.addLast(bottle);
                 System.out.println("put bottle in room " + location.getName());
