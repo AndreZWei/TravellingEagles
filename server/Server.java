@@ -119,7 +119,7 @@ public class Server extends RemoteServer implements ServerAPI {
     @Override
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
         LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location);
-        if (bottleHere.isEmpty())
+        if (bottleHere == null || bottleHere.isEmpty())
             return null;
         return bottleHere.getFirst();
     }
