@@ -3,9 +3,10 @@ package server;
 import client.Gift;
 import client.Location;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.*;
-import java.nio.Buffer;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -39,6 +40,7 @@ public class Server extends RemoteServer implements ServerAPI {
         int myIndex = eagleIdIndex++;
         try {
             sockets.put(myIndex, InetAddress.getByName(getClientHost()));
+            System.out.println("");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (ServerNotActiveException e) {
@@ -48,9 +50,9 @@ public class Server extends RemoteServer implements ServerAPI {
     }
 
     @Override
-    public void updateLocation(int eagleId, Location newLocation) throws RemoteException {
+    public synchronized void updateLocation(int eagleId, Location newLocation) throws RemoteException {
         Iterator<ChatRoom> roomIt = rooms.iterator();
-        while (roomIt.hasNext()){
+        while (roomIt.hasNext()) {
             ChatRoom chatRoom = roomIt.next();
             chatRoom.leaveRoom(eagleId);
         }
@@ -69,27 +71,33 @@ public class Server extends RemoteServer implements ServerAPI {
         Iterator<ChatRoom> roomIt = rooms.iterator();
         while (roomIt.hasNext()) {
             ChatRoom chatRoom = roomIt.next();
-            ArrayList<Integer> members = chatRoom.members;
-            int index = members.indexOf(eagleId);
-            if (index > -1) {
+            HashSet<Integer> members = chatRoom.members;
+            if (members.contains(eagleId)) {
                 byte[] buffer = payload.getBytes();
                 DatagramSocket socket = null;
                 try {
                     socket = new DatagramSocket();
                 } catch (SocketException e) {
                     e.printStackTrace();
+                    System.err.println("Unable to init socket");
                 }
-                for (int i=0; i < members.size(); i++) {
-                    if (i != index) {
-                        DatagramPacket packet = new DatagramPacket(buffer,buffer.length, sockets.get(members.get(i)), CLIENT_UDP_PORT);
+                Iterator<Integer> membersIt = members.iterator();
+                while (membersIt.hasNext()) {
+                    int memberId = membersIt.next();
+                    if (memberId != eagleId) {
+                        System.out.println("Entered");
+                        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, sockets.get(memberId),
+                                CLIENT_UDP_PORT);
+                        System.out.println(socket);
+                        System.out.println(new String(packet.getData(), 0, packet.getLength()));
                         try {
                             socket.send(packet);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            System.err.println("Unable to init socket");
                         }
                     }
                 }
-                socket.close();
                 return;
             }
         }
@@ -98,7 +106,7 @@ public class Server extends RemoteServer implements ServerAPI {
     @Override
     public void disconnect(int eagleId) throws RemoteException {
         Iterator<ChatRoom> roomIt = rooms.iterator();
-        while (roomIt.hasNext()){
+        while (roomIt.hasNext()) {
             ChatRoom chatRoom = roomIt.next();
             chatRoom.leaveRoom(eagleId);
         }
@@ -110,10 +118,9 @@ public class Server extends RemoteServer implements ServerAPI {
         // TODO: 4/22/18
         Location eagleLocation;
         for (ChatRoom room : rooms) {
-            ArrayList members = room.members;
-            int eagleIndex = members.indexOf(eagleId);
+            HashSet members = room.members;
             Location location;
-            if (eagleIndex > -1) {
+            if (members.contains(eagleId)) {
                 location = room.roomLocation;
                 LinkedList<Gift.DriftBottle> bottles = driftBottles.get(location.getName());
                 if (bottles == null) {
@@ -158,11 +165,11 @@ public class Server extends RemoteServer implements ServerAPI {
     private class ChatRoom {
 
         Location roomLocation;
-        ArrayList<Integer> members;
+        HashSet<Integer> members;
 
         public ChatRoom(Location roomLocation) {
             this.roomLocation = roomLocation;
-            members = new ArrayList<>();
+            members = new HashSet<>();
         }
 
         public void joinRoom(int eagleId) {

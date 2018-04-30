@@ -20,7 +20,7 @@ public class Client{
 
 		// read the map
 		try{
-			File file = new File("../map.config");
+			File file = new File("map.config");
 			Scanner scan = new Scanner(file);
 			map = readMap(scan);
 		} catch (FileNotFoundException e){
@@ -41,8 +41,9 @@ public class Client{
 		Eagle eagle = null;
 
 		try{
-			File file = new File("../eagle.log");
+			File file = new File("eagle.log");
 			if (file.exists()){
+				server.register();
 				InputStream is = new FileInputStream(file);
 				ObjectInputStream ois = new ObjectInputStream(is);
 				eagle = (Eagle) ois.readObject();
