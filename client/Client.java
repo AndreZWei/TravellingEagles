@@ -28,9 +28,9 @@ public class Client{
 		ServerAPI server = null;
 		try {
 			Registry registry = LocateRegistry.getRegistry("localhost", 9999);
-			System.out.println("检查网路连接...");
+			System.out.print("Checking network connection...");
 			server = (ServerAPI) registry.lookup("server");
-			System.out.println("檢查完畢!");
+			System.out.println("complete!");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -45,7 +45,7 @@ public class Client{
 				InputStream is = new FileInputStream(file);
 				ObjectInputStream ois = new ObjectInputStream(is);
 				eagle = (Eagle) ois.readObject();
-				System.out.println("讀檔完成!");
+				System.out.println("Read saved file complete!");
 			}
 			else {
 				// Create an eagle object
@@ -74,6 +74,7 @@ public class Client{
 				if (!sender.isAlive())
 					break;
 				Location loc = eagle.travel(map);
+				server.updateLocation(eagle.getID(), loc);
 				Thread.sleep(10000);
 				//server.updateLocation(eagle.getID(), loc);
 			} 

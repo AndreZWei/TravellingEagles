@@ -3,6 +3,7 @@
 
 # Files to not ignore
 !/.gitignore
+!/.config
 
 # Folder to not ignore
 !/client/
