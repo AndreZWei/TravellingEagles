@@ -116,8 +116,10 @@ public class Server extends RemoteServer implements ServerAPI {
             if (eagleIndex > -1) {
                 location = room.roomLocation;
                 LinkedList<Gift.DriftBottle> bottles = driftBottles.get(location);
-                if (bottles == null)
+                if (bottles == null) {
                     bottles = new LinkedList<>();
+                    driftBottles.put(location, bottles);
+                }
                 bottles.addLast(bottle);
                 System.out.println("put bottle in room " + location.getName());
                 return;
