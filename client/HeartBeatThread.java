@@ -37,7 +37,11 @@ public class HeartBeatThread implements Runnable{
 			} catch (Exception e){
 				e.printStackTrace();
 			}
-			server.heartbeat(eagle.getID());
+			try {
+				server.heartbeat(eagle.getID());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
