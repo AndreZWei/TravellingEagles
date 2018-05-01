@@ -143,7 +143,7 @@ public class Server extends RemoteServer implements ServerAPI {
         System.out.println(bottleHere.size());
         if (bottleHere == null || bottleHere.isEmpty())
             return null;
-        return bottleHere.getFirst();
+        return bottleHere.removeFirst();
     }
 
 
