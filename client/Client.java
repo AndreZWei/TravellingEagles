@@ -72,6 +72,8 @@ public class Client{
 			sender.start();
 			Thread receiver = new Thread(new ClientRoomReceiverThread(crm));
 			receiver.start();
+			Thread heartbeat = new Thread(new HeartBeatThread(eagle, crm));
+			heartbeat.start();
 			while(true){
 				if (!sender.isAlive())
 					break;

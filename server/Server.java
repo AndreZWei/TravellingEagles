@@ -140,7 +140,6 @@ public class Server extends RemoteServer implements ServerAPI {
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
         System.out.println("Get request, get bottle " + location.getName());
         LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location.getName());
-        System.out.println(bottleHere.size());
         if (bottleHere == null || bottleHere.isEmpty())
             return null;
         return bottleHere.removeFirst();
