@@ -159,6 +159,9 @@ public class Server extends RemoteServer implements ServerAPI {
             Server server = new Server();
             ServerAPI stub = (ServerAPI) UnicastRemoteObject.exportObject(server, registryPort);
             registry.rebind("server", stub);
+            HeartbeatCheck checker = new HeartbeatCheck(server);
+            Thread t = new Thread(checker);
+            t.start();
             System.out.println("Server ready");
         } catch (Exception e) {
             System.err.println("Server initialization exception: RMI bound failed");

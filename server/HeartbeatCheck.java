@@ -7,6 +7,10 @@ public class HeartbeatCheck implements Runnable{
 
     private Server server;
 
+    public HeartbeatCheck(Server server) {
+        this.server = server;
+    }
+
     @Override
     public void run() {
         Iterator it = server.sockets.entrySet().iterator();
