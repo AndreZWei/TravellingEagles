@@ -146,7 +146,7 @@ public class Server extends RemoteServer implements ServerAPI {
     }
 
     @Override
-    public void hearbeat(int eagleId) {
+    public void heartbeat(int eagleId) {
         Session session = sockets.get(eagleId);
         session.timestamp = System.currentTimeMillis();
     }

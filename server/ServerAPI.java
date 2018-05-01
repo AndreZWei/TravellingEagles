@@ -21,6 +21,6 @@ public interface ServerAPI extends Remote {
 
     Gift.DriftBottle getDriftBottle(Location location) throws RemoteException;
 
-    void hearbeat(int eagleId);
+    void heartbeat(int eagleId);
 
 }

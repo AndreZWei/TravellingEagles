@@ -4,6 +4,14 @@
 
 package client;
 
+import server.Server;
+import server.ServerAPI;
+
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 public class HeartBeatThread implements Runnable{
 	private ServerAPI server;
 	private ChatRoomManager crm;
@@ -23,7 +31,11 @@ public class HeartBeatThread implements Runnable{
 	}
 
 	public void run(){
-		Thread.sleep(1000);
+		try{
+			Thread.sleep(1000);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		server.heartbeat(eagle.getID());
 	}
 
