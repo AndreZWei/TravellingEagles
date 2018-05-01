@@ -19,7 +19,7 @@ public class Server extends RemoteServer implements ServerAPI {
     private static final int CLIENT_UDP_PORT = 9999;
     private int eagleIdIndex = 0;
     ArrayList<ChatRoom> rooms;
-    private HashMap<Integer, Session> sockets;
+    HashMap<Integer, Session> sockets;
     private HashMap<String, LinkedList<Gift.DriftBottle>> driftBottles;
 
     public Server() throws IOException {
