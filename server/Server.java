@@ -86,16 +86,19 @@ public class Server extends RemoteServer implements ServerAPI {
                     int memberId = membersIt.next();
                     if (memberId != eagleId) {
                         System.out.println("Entered");
-                        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, sockets.get(memberId).inetAddress,
-                                CLIENT_UDP_PORT);
-                        System.out.println(socket);
-                        System.out.println(new String(packet.getData(), 0, packet.getLength()));
-                        try {
-                            socket.send(packet);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            System.err.println("Unable to init socket");
+                        if (sockets.containsKey(memberId)) {
+                            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, sockets.get(memberId).inetAddress,
+                                    CLIENT_UDP_PORT);
+                            System.out.println(socket);
+                            System.out.println(new String(packet.getData(), 0, packet.getLength()));
+                            try {
+                                socket.send(packet);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                System.err.println("Unable to init socket");
+                            }
                         }
+
                     }
                 }
                 return;
