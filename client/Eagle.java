@@ -33,6 +33,12 @@ public class Eagle implements Serializable{
 		return bag;
 	}
 
+	public Gift getGift(int index){
+		Gift gift = this.bag.get(index);
+		this.bag.remove(index);
+		return gift;
+	}
+
 	public void showBag(){
 		bag.forEach((Gift gift) -> System.out.println((bag.indexOf(gift) + 1) + ": " + gift.getName()));
 	}
