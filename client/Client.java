@@ -14,7 +14,7 @@ import java.io.*;
 public class Client{
 	public static Map map;
 	public static Eagle eagle;
-	public static final String SERVER = "136.167.126.53";
+	public static final String SERVER = "172.20.10.5";
 
 	public static void main(String[] args){
 
