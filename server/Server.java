@@ -19,7 +19,7 @@ public class Server extends RemoteServer implements ServerAPI {
     private static final int CLIENT_UDP_PORT = 9999;
     private int eagleIdIndex = 0;
     ArrayList<ChatRoom> rooms;
-    private HashMap<Integer, InetAddress> sockets;
+    private HashMap<Integer, Session> sockets;
     private HashMap<String, LinkedList<Gift.DriftBottle>> driftBottles;
 
     public Server() throws IOException {
@@ -39,7 +39,7 @@ public class Server extends RemoteServer implements ServerAPI {
     public int register() throws RemoteException {
         int myIndex = eagleIdIndex++;
         try {
-            sockets.put(myIndex, InetAddress.getByName(getClientHost()));
+            sockets.put(myIndex, new Session(InetAddress.getByName(getClientHost())));
             System.out.println("");
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class Server extends RemoteServer implements ServerAPI {
                     int memberId = membersIt.next();
                     if (memberId != eagleId) {
                         System.out.println("Entered");
-                        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, sockets.get(memberId),
+                        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, sockets.get(memberId).inetAddress,
                                 CLIENT_UDP_PORT);
                         System.out.println(socket);
                         System.out.println(new String(packet.getData(), 0, packet.getLength()));
@@ -140,12 +140,16 @@ public class Server extends RemoteServer implements ServerAPI {
     public Gift.DriftBottle getDriftBottle(Location location) throws RemoteException {
         System.out.println("Get request, get bottle " + location.getName());
         LinkedList<Gift.DriftBottle> bottleHere = driftBottles.get(location.getName());
-        System.out.println(bottleHere.size());
         if (bottleHere == null || bottleHere.isEmpty())
             return null;
         return bottleHere.removeFirst();
     }
 
+    @Override
+    public void hearbeat(int eagleId) {
+        Session session = sockets.get(eagleId);
+        session.timestamp = System.currentTimeMillis();
+    }
 
     public static void main(String[] args) {
         int registryPort = Integer.parseInt(args[0]);
@@ -187,6 +191,18 @@ public class Server extends RemoteServer implements ServerAPI {
         public boolean equals(Object obj) {
             ChatRoom room = (ChatRoom) obj;
             return room.roomLocation.equals(this.roomLocation);
+        }
+
+    }
+
+    class Session {
+
+        InetAddress inetAddress;
+        long timestamp;
+
+        public Session(InetAddress inetAddress) {
+            this.inetAddress = inetAddress;
+            this.timestamp = System.currentTimeMillis();
         }
     }
 }
