@@ -31,12 +31,15 @@ public class HeartBeatThread implements Runnable{
 	}
 
 	public void run(){
-		try{
-			Thread.sleep(1000);
-		} catch (Exception e){
-			e.printStackTrace();
+		while(true){
+			try{
+				Thread.sleep(1000);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			server.heartbeat(eagle.getID());
 		}
-		server.heartbeat(eagle.getID());
+		
 	}
 
 }
