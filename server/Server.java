@@ -154,6 +154,23 @@ public class Server extends RemoteServer implements ServerAPI {
         session.timestamp = System.currentTimeMillis();
     }
 
+    @Override
+    public InetAddress[] p2pSend(int eagleId) throws RemoteException {
+        Iterator<ChatRoom> roomIterator = rooms.iterator();
+        while (roomIterator.hasNext()) {
+            ChatRoom room = roomIterator.next();
+            HashSet<Integer> memberList = room.members;
+            if (memberList.contains(eagleId)) {
+                ArrayList<InetAddress> clientIp = new ArrayList<>();
+                for (int memberId : memberList) {
+                    clientIp.add(sockets.get(memberId).inetAddress);
+                }
+                return clientIp.toArray(new InetAddress[clientIp.size()]);
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         int registryPort = Integer.parseInt(args[0]);
         Registry registry;

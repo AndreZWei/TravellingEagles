@@ -3,8 +3,8 @@ package server;
 
 import client.Gift;
 import client.Location;
-import com.sun.org.apache.regexp.internal.RE;
 
+import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -23,5 +23,7 @@ public interface ServerAPI extends Remote {
     Gift.DriftBottle getDriftBottle(Location location) throws RemoteException;
 
     void heartbeat(int eagleId) throws RemoteException;
+
+    InetAddress[] p2pSend(int eagleId) throws RemoteException;
 
 }
