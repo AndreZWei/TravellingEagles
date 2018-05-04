@@ -2,6 +2,9 @@
 package client;
 
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -71,7 +74,14 @@ public class ClientSenderThread implements Runnable {
 					break;
 				}
 				else {
-					server.sendMessage(eagle.getID(), msg);
+					//server.sendMessage(eagle.getID(), msg);
+					InetAddress[] peers = server.p2pSend(eagle.getID());
+					byte[] buffer = msg.getBytes();
+					DatagramSocket socket = new DatagramSocket();
+					for (InetAddress peer : peers) {
+						DatagramPacket p = new DatagramPacket(buffer, buffer.length, peer, 9999);
+						socket.send(p);
+					}
 				}
 			}
 		}
