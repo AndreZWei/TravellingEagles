@@ -8,3 +8,4 @@
 # Folder to not ignore
 !/client/
 !/server/
+!/javadoc/
